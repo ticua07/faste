@@ -1,5 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { prisma } from "../../utils/prisma";
+
+console.log(await prisma.paste.findMany());
 ---
 
 <Layout title="Faste - Create your pastes faster">
