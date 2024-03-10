@@ -14,5 +14,6 @@ datasource db {
 model paste {
     id        Int      @id @default(autoincrement())
     content   String
+    slug      String
     createdAt DateTime @default(now())
 }
