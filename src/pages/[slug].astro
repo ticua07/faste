@@ -1,0 +1,51 @@
+---
+import { prisma } from "../../utils/prisma";
+import Layout from "../layouts/Layout.astro";
+import { Code } from "astro:components";
+import { codeToHtml } from "shiki";
+
+const { slug } = Astro.params;
+const data = await prisma.paste.findFirst({
+  where: {
+    slug: slug,
+  },
+});
+
+if (data === null) {
+  return Astro.redirect("/");
+}
+
+const html = await codeToHtml(data.content, {
+  lang: "markdown",
+  theme: "one-dark-pro",
+  colorReplacements: {
+    "#171717": "#282c34",
+    "#282c34": "#171717",
+  },
+});
+---
+
+<Layout title="Faste - Create your pastes faster">
+  <main class="w-full h-screen bg-neutral-900 py-3 flex flex-row">
+    <div class="h-full flex w-12 items-center flex-col">
+      {
+        data.content
+          .split("\n")
+          .map((_, idx) => <span class="text-sm text-gray-400">{idx + 1}</span>)
+      }
+    </div>
+    <div
+      class="text-sm tracking-tight flex flex-col resize-none h-full w-max font-mono outline-none ring-none border-none bg-neutral-900 pt-[1px] px-12 pl-0 overflow-hidden"
+      set:html={html}
+    >
+      <!-- <Code code={data.content} theme="one-dark-pro" lang={"markdown"} /> -->
+    </div>
+  </main>
+</Layout>
+
+<!-- use is:inline to avoid astro scoping as the html in the set:html doesn't have astro's scope -->
+<style is:inline>
+  .shiki {
+    background-color: #171717 !important;
+  }
+</style>
