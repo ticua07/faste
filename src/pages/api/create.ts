@@ -18,7 +18,7 @@ export const POST: APIRoute = async ({ url, request }) => {
                     slug: randomLink
                 }
             })
-            return new Response(JSON.stringify({ link: `${url}${randomLink}` }))
+            return new Response(JSON.stringify({ link: `${url.origin}/${randomLink}` }))
         }
     }
     return new Response(JSON.stringify({ "success": false }))
