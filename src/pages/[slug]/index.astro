@@ -1,7 +1,6 @@
 ---
-import { prisma } from "../../utils/prisma";
-import Layout from "../layouts/Layout.astro";
-import { Code } from "astro:components";
+import { prisma } from "../../../utils/prisma";
+import Layout from "../../layouts/Layout.astro";
 import { codeToHtml } from "shiki";
 
 const { slug } = Astro.params;
