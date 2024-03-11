@@ -1,8 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { prisma } from "../../utils/prisma";
-
-console.log(await prisma.paste.findMany());
 ---
 
 <Layout title="Faste - Create your pastes faster">
@@ -11,25 +8,53 @@ console.log(await prisma.paste.findMany());
       <span class="text-sm text-gray-400">&gt;</span>
     </div>
     <textarea
+      autofocus
+      id="content"
       class="text-sm tracking-tight resize-none h-full w-full font-mono outline-none ring-none border-none bg-neutral-900 text-white pt-[1px] px-12 pl-0"
     ></textarea>
     <section
       class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white flex divide-neutral-700"
     >
       <button
+        tabindex="0"
+        id="new"
         class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-l"
-        >Save</button
-      >
-      <button class="border bg-neutral-900 border-neutral-700 px-4 py-2"
-        >New</button
+        >Empty current paste</button
       >
       <button
-        class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r"
-        >Share</button
+        id="save"
+        class="border bg-neutral-900 border-neutral-700 px-4 py-2"
+        >Create new paste</button
       >
     </section>
   </main>
 </Layout>
+
+<script>
+  const $saveButton = document.querySelector("#save");
+  const $newButton = document.querySelector("#new");
+  const $textarea = document.querySelector("#content") as HTMLTextAreaElement;
+
+  if ($saveButton instanceof HTMLButtonElement) {
+    $saveButton.onclick = async () => {
+      const res = await fetch("/api/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: $textarea.value }),
+      });
+      const data = res.json().then((data) => {
+        window.location.href = data.link;
+      });
+    };
+  }
+  if ($newButton instanceof HTMLButtonElement) {
+    $newButton.onclick = () => {
+      $textarea.value = "";
+    };
+  }
+</script>
 
 <style>
   textarea {
