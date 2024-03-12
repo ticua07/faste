@@ -26,7 +26,7 @@ const html = await codeToHtml(data.content, {
 
 <Layout title="Faste - Create your pastes faster">
   <main class="w-full h-screen bg-neutral-900 py-3 flex flex-row">
-    <div class="h-full flex w-12 items-center flex-col">
+    <div class="h-full flex min-w-12 max-w-12 items-center flex-col">
       {
         data.content
           .split("\n")
@@ -34,7 +34,7 @@ const html = await codeToHtml(data.content, {
       }
     </div>
     <div
-      class="text-sm tracking-tight flex flex-col resize-none h-full w-max font-mono outline-none ring-none border-none bg-neutral-900 pt-[1px] px-12 pl-0 overflow-hidden"
+      class="text-sm overflow-x-scroll tracking-tight flex flex-col resize-none h-full w-max font-mono outline-none ring-none border-none bg-neutral-900 pt-[1px] px-12 pl-0 overflow-hidden"
       set:html={html}
     />
     <section
@@ -45,9 +45,11 @@ const html = await codeToHtml(data.content, {
         class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r hover:bg-neutral-950 active:bg-neutral-900"
       >
         View raw<br />
-        <kbd>CTRL</kbd>
-        +
-        <kbd>r</kbd>
+        <div class="hidden sm:block">
+          <kbd>CTRL</kbd>
+          +
+          <kbd>r</kbd>
+        </div>
       </button>
     </section>
   </main>
