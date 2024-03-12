@@ -36,9 +36,20 @@ const html = await codeToHtml(data.content, {
     <div
       class="text-sm tracking-tight flex flex-col resize-none h-full w-max font-mono outline-none ring-none border-none bg-neutral-900 pt-[1px] px-12 pl-0 overflow-hidden"
       set:html={html}
+    />
+    <section
+      class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white flex divide-neutral-700"
     >
-      <!-- <Code code={data.content} theme="one-dark-pro" lang={"markdown"} /> -->
-    </div>
+      <button
+        id="raw"
+        class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r hover:bg-neutral-950 active:bg-neutral-900"
+      >
+        View raw<br />
+        <kbd>CTRL</kbd>
+        +
+        <kbd>r</kbd>
+      </button>
+    </section>
   </main>
 </Layout>
 
@@ -48,3 +59,20 @@ const html = await codeToHtml(data.content, {
     background-color: #171717 !important;
   }
 </style>
+
+<script>
+  const $viewRawButton = document.querySelector("#raw");
+  if ($viewRawButton instanceof HTMLButtonElement) {
+    $viewRawButton.onclick = () => {
+      const newUrl = `${window.location.origin}${window.location.pathname}/raw`;
+      window.location.href = newUrl;
+    };
+  }
+  window.addEventListener("keydown", async (event) => {
+    if (event.ctrlKey && event.key.toLowerCase() === "r") {
+      event.preventDefault();
+      const newUrl = `${window.location.origin}${window.location.pathname}/raw`;
+      window.location.href = newUrl;
+    }
+  });
+</script>
