@@ -17,15 +17,23 @@ import Layout from "../layouts/Layout.astro";
     >
       <button
         tabindex="0"
-        id="new"
-        class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-l"
-        >Empty current paste</button
-      >
-      <button
         id="save"
-        class="border bg-neutral-900 border-neutral-700 px-4 py-2"
-        >Create new paste</button
+        class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-l hover:bg-neutral-950 active:bg-neutral-900"
       >
+        Create new paste<br />
+        <kbd>CTRL</kbd>
+        +
+        <kbd>S</kbd>
+      </button>
+      <button
+        id="new"
+        class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r hover:bg-neutral-950 active:bg-neutral-900"
+      >
+        Empty current paste<br />
+        <kbd>CTRL</kbd>
+        +
+        <kbd>Q</kbd>
+      </button>
     </section>
   </main>
 </Layout>
@@ -35,25 +43,43 @@ import Layout from "../layouts/Layout.astro";
   const $newButton = document.querySelector("#new");
   const $textarea = document.querySelector("#content") as HTMLTextAreaElement;
 
+  async function saveData() {
+    const res = await fetch("/api/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ content: $textarea.value }),
+    });
+    res.json().then((data) => {
+      window.location.href = data.link;
+    });
+  }
+
   if ($saveButton instanceof HTMLButtonElement) {
     $saveButton.onclick = async () => {
-      const res = await fetch("/api/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content: $textarea.value }),
-      });
-      const data = res.json().then((data) => {
-        window.location.href = data.link;
-      });
+      await saveData();
     };
   }
+
   if ($newButton instanceof HTMLButtonElement) {
     $newButton.onclick = () => {
       $textarea.value = "";
     };
   }
+
+  window.addEventListener("keydown", async (event) => {
+    if (event.ctrlKey && event.key.toLowerCase() === "s") {
+      event.preventDefault();
+      console.log("hola");
+      await saveData();
+    }
+
+    if (event.ctrlKey && event.key.toLowerCase() === "q") {
+      event.preventDefault();
+      $textarea.value = "";
+    }
+  });
 </script>
 
 <style>
