@@ -1,7 +1,9 @@
 ---
 import { prisma } from "../../../utils/prisma";
 import Layout from "../../layouts/Layout.astro";
-import { codeToHtml } from "shiki";
+// import { getHighlighter, codeToHtml } from "shiki";
+import "highlight.js/styles/atom-one-dark.min.css";
+import hljs from "highlight.js";
 
 const { slug } = Astro.params;
 const data = await prisma.paste.findFirst({
@@ -14,18 +16,13 @@ if (data === null) {
   return Astro.redirect("/");
 }
 
-const html = await codeToHtml(data.content, {
-  lang: "markdown",
-  theme: "one-dark-pro",
-  colorReplacements: {
-    "#171717": "#282c34",
-    "#282c34": "#171717",
-  },
-});
+const html = hljs.highlightAuto(data.content).value;
 ---
 
 <Layout title="Faste - Create your pastes faster">
-  <main class="w-full h-screen bg-neutral-900 pt-3 flex flex-row">
+  <main
+    class="w-full h-screen bg-neutral-900 pt-3 flex flex-row overflow-y-scroll"
+  >
     <div class="h-full flex min-w-12 max-w-12 items-center flex-col">
       {
         data.content
@@ -33,27 +30,28 @@ const html = await codeToHtml(data.content, {
           .map((_, idx) => <span class="text-sm text-gray-400">{idx + 1}</span>)
       }
     </div>
-    <div
-      class="text-sm overflow-x-scroll tracking-tight flex flex-col resize-none h-full w-max font-mono outline-none ring-none border-none bg-neutral-900 pt-[1px] px-12 pl-0 overflow-hidden"
+    <pre
+      id="code"
+      class="text-sm font-code resize-none h-max w-max outline-none ring-none border-none text-gray-300 bg-neutral-900 pt-[1px] px-12 pl-0 overflow-hidden"
       id="content"
       set:html={html}
     />
-    <section
-      class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white flex divide-neutral-700"
-    >
-      <button
-        id="raw"
-        class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r hover:bg-neutral-950 active:bg-neutral-900"
-      >
-        View raw<br />
-        <div class="hidden sm:block">
-          <kbd>CTRL</kbd>
-          +
-          <kbd>r</kbd>
-        </div>
-      </button>
-    </section>
   </main>
+  <section
+    class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white flex divide-neutral-700"
+  >
+    <button
+      id="raw"
+      class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r hover:bg-neutral-950 active:bg-neutral-900"
+    >
+      View raw<br />
+      <div class="hidden sm:block">
+        <kbd>CTRL</kbd>
+        +
+        <kbd>r</kbd>
+      </div>
+    </button>
+  </section>
 </Layout>
 
 <!-- use is:inline to avoid astro scoping as the html in the set:html doesn't have astro's scope -->
