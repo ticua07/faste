@@ -4,6 +4,11 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Faste - Create your pastes faster">
   <main class="w-screen h-screen bg-neutral-900 py-3 pr-2 flex flex-row">
+    <span
+      id="tooltip"
+      class="absolute left-1/2 transform -translate-x-1/2 bg-neutral-800 text-white ring-green-700 rounded p-2 ring-1 -translate-y-20 transition-transform"
+      >Emptied current paste</span
+    >
     <div class="h-full flex w-12 items-start justify-center">
       <span class="text-sm text-gray-400">&gt;</span>
     </div>
@@ -46,6 +51,7 @@ import Layout from "../layouts/Layout.astro";
   const $saveButton = document.querySelector("#save");
   const $newButton = document.querySelector("#new");
   const $textarea = document.querySelector("#content") as HTMLTextAreaElement;
+  const $tooltip = document.querySelector("#tooltip")!;
 
   async function saveData() {
     const res = await fetch("/api/create", {
@@ -68,7 +74,17 @@ import Layout from "../layouts/Layout.astro";
 
   if ($newButton instanceof HTMLButtonElement) {
     $newButton.onclick = () => {
-      $textarea.value = "";
+      const success = confirm(
+        "Are you sure you want to empty the current paste?"
+      );
+      if (success) {
+        $textarea.value = "";
+
+        $tooltip.classList.replace("-translate-y-20", "translate-y-0");
+        setTimeout(() => {
+          $tooltip.classList.replace("translate-y-0", "-translate-y-20");
+        }, 1000);
+      }
     };
   }
 
@@ -81,7 +97,17 @@ import Layout from "../layouts/Layout.astro";
 
     if (event.ctrlKey && event.key.toLowerCase() === "q") {
       event.preventDefault();
-      $textarea.value = "";
+      const success = confirm(
+        "Are you sure you want to empty the current paste?"
+      );
+      if (success) {
+        $textarea.value = "";
+
+        $tooltip.classList.replace("-translate-y-20", "translate-y-0");
+        setTimeout(() => {
+          $tooltip.classList.replace("translate-y-0", "-translate-y-20");
+        }, 1000);
+      }
     }
   });
 </script>
