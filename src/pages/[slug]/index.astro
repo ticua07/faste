@@ -41,6 +41,18 @@ const html = hljs.highlightAuto(data.content).value;
     class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white flex divide-neutral-700"
   >
     <button
+      id="copy"
+      class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r hover:bg-neutral-950 active:bg-neutral-900"
+    >
+      Copy Link<br />
+      <div class="hidden sm:block">
+        <kbd>CTRL</kbd>
+        +
+        <kbd>q</kbd>
+      </div>
+    </button>
+
+    <button
       id="raw"
       class="border bg-neutral-900 border-neutral-700 px-4 py-2 rounded-r hover:bg-neutral-950 active:bg-neutral-900"
     >
@@ -74,6 +86,11 @@ const html = hljs.highlightAuto(data.content).value;
       event.preventDefault();
       const newUrl = `${window.location.origin}${window.location.pathname}/raw`;
       window.location.href = newUrl;
+    }
+
+    if (event.ctrlKey && event.key.toLowerCase() === "q") {
+      event.preventDefault();
+      navigator.clipboard.writeText(window.location.href);
     }
   });
 </script>
