@@ -3,7 +3,7 @@ import { prisma } from "../../../utils/prisma";
 import { z } from "zod";
 import { customAlphabet } from 'nanoid/non-secure'
 
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 12)
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)
 
 
 export const POST: APIRoute = async ({ url, request }) => {
