@@ -4,7 +4,10 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Faste - Create your pastes faster">
-  <main class="w-screen h-screen bg-neutral-900 py-3 pr-2 flex flex-row">
+  <main
+    slot="body"
+    class="w-screen h-screen bg-neutral-900 py-3 pr-2 flex flex-row"
+  >
     <span
       id="tooltip"
       class="absolute left-1/2 transform -translate-x-1/2 bg-neutral-800 text-white ring-green-700 rounded p-2 ring-1 -translate-y-20 transition-transform"

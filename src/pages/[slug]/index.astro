@@ -1,7 +1,6 @@
 ---
 import { prisma } from "../../../utils/prisma";
 import Layout from "../../layouts/Layout.astro";
-// import { getHighlighter, codeToHtml } from "shiki";
 import "highlight.js/styles/atom-one-dark.min.css";
 import hljs from "highlight.js";
 
@@ -20,7 +19,10 @@ const html = hljs.highlightAuto(data.content).value;
 ---
 
 <Layout title="Faste - Create your pastes faster">
+  <meta slot="head" name="robots" content="noindex" />
+
   <main
+    slot="body"
     class="w-full h-screen bg-neutral-900 pt-3 flex flex-row overflow-y-scroll"
   >
     <span
